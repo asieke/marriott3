@@ -10,7 +10,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
-		"genIndex": "bash scripts/bash/generateIndex.bash"
+		"genIndex": "bash scripts/bash/generateIndex.bash",
+		"genDBTypes": "supabase gen types typescript --project-id hqdnfqinqworbwkxlkmg > src/lib/types/database.types.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -38,6 +39,14 @@
 		"@fontsource-variable/inter": "^5.0.19",
 		"@fontsource-variable/lexend": "^5.0.20",
 		"@fontsource/inter": "^5.0.19",
-		"@fontsource/lexend": "^5.0.20"
+		"@fontsource/lexend": "^5.0.20",
+		"@supabase/ssr": "^0.4.0",
+		"axios": "^1.7.2",
+		"dexie": "^4.0.8",
+		"dotenv": "^16.4.5",
+		"google-auth-library": "^9.12.0",
+		"googleapis": "^140.0.1",
+		"openai": "^4.53.2",
+		"sharp": "^0.33.4"
 	}
 }

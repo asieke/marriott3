@@ -10,3 +10,15 @@
 		@apply rounded-lg p-6 shadow-md;
 	}
 }
+
+h1 {
+	@apply py-3 text-center text-4xl font-semibold;
+}
+
+h2 {
+	@apply font-display py-4 text-3xl font-semibold;
+}
+
+h3 {
+	@apply py-1 text-center font-sans text-2xl font-normal;
+}
