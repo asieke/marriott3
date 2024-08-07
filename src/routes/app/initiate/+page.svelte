@@ -10,6 +10,7 @@
 	let step = '';
 	let synced = 0;
 	let total = 0;
+	let doneSyncing = 0;
 
 	const deleteDB = async () => {
 		await db.delete();
@@ -31,13 +32,11 @@
 		const t1 = new Date().getTime();
 
 		for (let i = 0; i < count; i += chunk) {
-			const { data } = (await supabase
+			const { data } = await supabase
 				.from('artists')
-				.select(
-					'id, name, description, short_description, category, region, start_year, end_year, base64'
-				)
+				.select('*')
 				.order('id')
-				.range(i, i + chunk - 1)) as { data: Tables<'artists'>[] };
+				.range(i, i + chunk - 1);
 
 			if (data) {
 				await db.artists.bulkAdd(data);
@@ -55,7 +54,7 @@
 		total = 0;
 		console.log('[START] - syncing Art');
 
-		const { data: count } = await supabase.rpc('count_art_popular');
+		const { data: count } = await supabase.rpc('count_arts');
 		total = count;
 		await db.arts.clear();
 
@@ -65,7 +64,7 @@
 		for (let i = 0; i < count; i += chunk) {
 			const { data } = (await supabase
 				.from('arts')
-				.select('id, artist_id, title, category, base64')
+				.select('*')
 				.order('id')
 				.range(i, i + chunk - 1)) as { data: Tables<'arts'>[] };
 
@@ -97,10 +96,7 @@
 				.from('events')
 				.select('id, title, date, summary, facts, questions, base64')
 				.order('id')
-				.neq('base64', '')
 				.range(i, i + chunk - 1)) as { data: Tables<'events'>[] };
-
-			console.log('data', data);
 
 			if (data) {
 				await db.events.bulkAdd(data);
@@ -131,7 +127,6 @@
 				.from('sentences')
 				.select('id, text, base64')
 				.order('id')
-				.neq('base64', '')
 				.range(i, i + chunk - 1)) as { data: Tables<'sentences'>[] };
 
 			if (data) {
@@ -176,6 +171,8 @@
 				})
 			);
 
+			console.log('synced: ', i + chunk.length, 'of', photos.length);
+
 			synced += chunk.length;
 		}
 
@@ -184,34 +181,44 @@
 	};
 
 	const sync = async () => {
-		await syncArtists();
+		// await syncArtists();
 		await syncArt();
-		await syncEvents();
-		await syncSentences();
-		await syncPhotos();
+		// await syncEvents();
+		// await syncSentences();
+		// await syncPhotos();
+		doneSyncing = 1;
 	};
 </script>
 
 <Card>
-	<h1>Lets set up your Marriott Board!</h1>
-	<h3 class="pb-6">
-		We need to sync your local files with the database. To do this, we need to select a local folder
-		to sync with. This folder will be used to store all of your files and will be synced with the
-		database.
-	</h3>
+	{#if doneSyncing === 1}
+		<h1>Syncing Complete!</h1>
+		<h3 class="pb-6">You are now ready to use the Marriott Board!</h3>
+		<div class="mx-auto mt-6 w-1/3">
+			<a href="/app/display" class="block w-full text-center">Go to the Board!</a>
+		</div>
+	{:else}
+		<h1>Lets set up your Marriott Board!</h1>
+		<h3 class="pb-6">
+			We need to sync your local files with the database. To do this, we need to select a local
+			folder to sync with. This folder will be used to store all of your files and will be synced
+			with the database.
+		</h3>
 
-	<h2 class="text-center">{step !== '' ? 'Syncing ' : ' '}<b>{step}</b></h2>
+		<h2 class="text-center">{step !== '' ? 'Syncing ' : ' '}<b>{step}</b></h2>
 
-	<Progress progress={Math.round((synced * 100) / total)} />
+		<Progress progress={Math.round((synced * 100) / total)} />
 
-	<div class="mx-auto flex w-1/2 flex-row gap-x-4 pt-6">
-		<button on:click={sync}> Sync</button>
-		<button on:click={deleteDB}> Delete DB</button>
-	</div>
+		<div class="mx-auto flex w-1/2 flex-row gap-x-4 pt-6">
+			<button class="w-1/2" on:click={sync}> Sync</button>
+			<button class="w-1/2" on:click={deleteDB}> Delete DB</button>
+		</div>
+	{/if}
 </Card>
 
 <style lang="postcss">
-	button {
-		@apply w-1/2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700;
+	button,
+	a {
+		@apply rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700;
 	}
 </style>

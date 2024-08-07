@@ -10,7 +10,7 @@
 			provider: 'google',
 			options: {
 				scopes:
-					'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/photoslibrary.readonly',
+					'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events.readonly https://www.googleapis.com/auth/photoslibrary.readonly',
 				redirectTo: PUBLIC_CALLBACK_URL,
 				queryParams: {
 					access_type: 'offline',

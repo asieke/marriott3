@@ -9,176 +9,68 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      albums: {
-        Row: {
-          created_at: string
-          google_album_id: string | null
-          id: number
-          img_url: string | null
-          title: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          google_album_id?: string | null
-          id?: number
-          img_url?: string | null
-          title?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          google_album_id?: string | null
-          id?: number
-          img_url?: string | null
-          title?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "albums_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       artists: {
         Row: {
-          artist_url: string | null
-          base64: string | null
-          category: string | null
-          created_at: string | null
-          description: string | null
-          end_year: string | null
-          has_images: boolean | null
+          base64: string
+          birth: string
+          category: string
+          description: string
+          died: string
           id: number
-          image_count: string | null
-          img_url: string | null
-          name: string | null
-          region: string | null
-          short_description: string | null
-          start_year: string | null
+          location: string
+          name: string
         }
         Insert: {
-          artist_url?: string | null
-          base64?: string | null
-          category?: string | null
-          created_at?: string | null
-          description?: string | null
-          end_year?: string | null
-          has_images?: boolean | null
+          base64?: string
+          birth?: string
+          category?: string
+          description?: string
+          died?: string
           id: number
-          image_count?: string | null
-          img_url?: string | null
-          name?: string | null
-          region?: string | null
-          short_description?: string | null
-          start_year?: string | null
+          location?: string
+          name?: string
         }
         Update: {
-          artist_url?: string | null
-          base64?: string | null
-          category?: string | null
-          created_at?: string | null
-          description?: string | null
-          end_year?: string | null
-          has_images?: boolean | null
+          base64?: string
+          birth?: string
+          category?: string
+          description?: string
+          died?: string
           id?: number
-          image_count?: string | null
-          img_url?: string | null
-          name?: string | null
-          region?: string | null
-          short_description?: string | null
-          start_year?: string | null
+          location?: string
+          name?: string
         }
         Relationships: []
       }
       arts: {
         Row: {
-          artist_id: number
+          artist: string
           base64: string
-          category: string | null
-          created_at: string | null
+          facts: string[]
           id: number
-          popular: boolean
-          sk: string | null
+          summary: string
           title: string
+          year: string
         }
         Insert: {
-          artist_id: number
-          base64: string
-          category?: string | null
-          created_at?: string | null
-          id: number
-          popular?: boolean
-          sk?: string | null
-          title: string
-        }
-        Update: {
-          artist_id?: number
+          artist?: string
           base64?: string
-          category?: string | null
-          created_at?: string | null
-          id?: number
-          popular?: boolean
-          sk?: string | null
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "arts_artist_id_fkey"
-            columns: ["artist_id"]
-            isOneToOne: false
-            referencedRelation: "artists"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      calendars: {
-        Row: {
-          created_at: string
-          description: string | null
-          google_id: string
+          facts: string[]
           id: number
-          is_selected: boolean | null
-          summary: string | null
-          summaryOverride: string | null
-          timeZone: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          google_id: string
-          id?: number
-          is_selected?: boolean | null
-          summary?: string | null
-          summaryOverride?: string | null
-          timeZone?: string | null
-          user_id?: string | null
+          summary?: string
+          title?: string
+          year?: string
         }
         Update: {
-          created_at?: string
-          description?: string | null
-          google_id?: string
+          artist?: string
+          base64?: string
+          facts?: string[]
           id?: number
-          is_selected?: boolean | null
-          summary?: string | null
-          summaryOverride?: string | null
-          timeZone?: string | null
-          user_id?: string | null
+          summary?: string
+          title?: string
+          year?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "calendars_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       events: {
         Row: {
@@ -225,19 +117,16 @@ export type Database = {
       sentences: {
         Row: {
           base64: string
-          created_at: string
           id: number
           text: string
         }
         Insert: {
           base64?: string
-          created_at?: string
           id?: number
-          text: string
+          text?: string
         }
         Update: {
           base64?: string
-          created_at?: string
           id?: number
           text?: string
         }
@@ -248,19 +137,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      count_art_popular: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
       count_artists: {
         Args: Record<PropertyKey, never>
         Returns: number
       }
-      count_events_total: {
+      count_arts: {
         Args: Record<PropertyKey, never>
         Returns: number
       }
-      count_events_with_image: {
+      count_events: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      count_events_with_images: {
         Args: Record<PropertyKey, never>
         Returns: number
       }

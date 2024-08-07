@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { SignIn } from '$components';
+	import { SignIn, SignOut } from '$components';
+
+	export let data;
+
+	console.log(data);
 </script>
 
-<SignIn />
+{#if !data.session}
+	<SignIn />
+{:else}
+	<SignOut />
+{/if}

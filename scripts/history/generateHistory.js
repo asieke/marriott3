@@ -8,22 +8,19 @@ export const generateHistoryJSON = async (line) => {
 			{
 				role: 'system',
 				content: `
-        You are an expert researcher that is creating a series of podcasts about
-        important topics across all topics.  The podcast is for 10 years olds to learn about history,
-        economics, science, and more.
-        You will be given a short line outlining a topic, date, and category.
-        From that, please generate the following JSON object
-				{
-          slug: (text) - 4 or fewer words that describe the topic e.g. "Life of Charles Darwin"
-					title: (text) - 12 or fewer words.  The title of the podcast.  It should be quirky and fun for a 10 year old.
-          context: (text) - 100-200 words that explain the context prior to the TOPIC.  DONT SUMMARIZE THE TOPIC.  JUST provide the necessary background information to understand a summary of the topic.
-          summary: (text) - A 100-200 word summary of the topic that a 10 year old could understand.  Provide any additional context and importantly explain why the topic is historically significant or consequential.
-          long_summary: (text) - A 300-500 word summary of the topic that a 10 year old could understand.  Provide any additional context and importantly explain why the topic is historically significant or consequential.
-          facts: (array of text) - 3 interesting or quirky facts NOT ALREADY INCLUDED IN THE SUMMARIES.
-					questions: (array of text) - 2 interesting discussion questions about the topic for a 10 year old.
-					date: (text) - the date of the topic (could be a range or approximate if its long ago)
-					image_query: (text) - the text to put into a google search to find an image related to the topic
-				}
+				You are a history blogger that writes a blog for 10-year-olds.
+				You will be given a topic and you need to write a 500 WORD BLOG POST ABOUT IT.
+				Make the format of the blog as follows:
+
+				Introductory Hook: (1-2 sentences) [Write an engaging hook that draws the reader in and introduces the topic in an exciting way.  Could be a teaser or a question.]
+
+				Historical Context: To understand [Topic]: (1 paragraphs), let's go back to [briefly describe the time period or background needed to understand the topic]. This was a time when [describe a key historical event or situation related to the topic].
+
+				Main Content: [Topic] (5 paragraphs) is fascinating because [describe the main features, events, or importance of the topic]. [Provide interesting facts, stories, and details about the topic that would captivate a 10-year-old's imagination. Include relevant names, places, and dates that are easy to remember and engaging.]
+
+				Conclusion: (1 paragraph) [Summarize the legacy of the topic and explain why it is important to society today. Encourage curiosity and further exploration.]
+
+				Write your blog post in markdown.  Feel free to use headings, bullet points, and other markdown formatting to make your blog post engaging and easy to read.
 				`
 			},
 			{
@@ -31,34 +28,40 @@ export const generateHistoryJSON = async (line) => {
 				content: 'Here is the topic: ' + line
 			}
 		],
-		model: 'gpt-4o',
-		response_format: { type: 'json_object' }
+		model: 'gpt-4o'
 	});
 
-	return JSON.parse(completion.choices[0].message.content);
+	return completion.choices[0].message.content;
 };
 
 async function main() {
-	const data = fs.readFileSync('./scripts/history/data.txt', 'utf8');
-	const dataArr = data.split('\n');
+	const { data: num } = await supabase.rpc('count_events');
 
-	for (let i = 0; i < 250; i++) {
-		//check if the record already exists
-		const { data: existingData } = await supabase.from('events').select('id').eq('id', i);
-		if (existingData.length > 0) {
-			console.log(`${i} Skipping - ${dataArr[i]}`);
-			continue;
-		}
+	const chunk = 10;
 
-		const json = await generateHistoryJSON(dataArr[i]);
+	for (let i = 0; i < num; i += chunk) {
+		const { data } = await supabase
+			.from('events')
+			.select('id, title, date, summary')
+			.eq('long_summary', '')
+			.order('id', { ascending: true })
+			.limit(chunk);
 
-		const insertData = { ...json, id: i };
+		for (const row of data) {
+			const str = JSON.stringify(row);
+			const long_summary = await generateHistoryJSON(str);
 
-		const { error } = await supabase.from('events').insert(insertData);
-		if (error) {
-			console.log(`${i} Error     - ${dataArr[i]}`);
-		} else {
-			console.log(`${i} Inserting - ${dataArr[i]}`);
+			const { error } = await supabase
+				.from('events')
+				.update({ long_summary: long_summary })
+				.eq('id', row.id);
+
+			if (error) {
+				console.log(error);
+				console.log(`${row.id} Error - ${row.title}`);
+			} else {
+				console.log(`${row.id} Success - ${row.title}`);
+			}
 		}
 	}
 }

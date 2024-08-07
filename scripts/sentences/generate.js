@@ -6,15 +6,20 @@ import axios from 'axios';
 import sharp from 'sharp';
 
 export const generateAIImage = async (sentence) => {
-	const response = await openai.images.generate({
-		model: 'dall-e-3',
-		prompt: `Generate an image for a 10 year old child that visually represents the following sentence: ${sentence}. The picture should be clear, easy to understand, and should fill the entire image space without any borders or extraneous details.  DO NOT INCLUDE ANY TEXT ON THE IMAGE.  USE COLOR.`,
-		n: 1,
-		size: '1024x1024'
-	});
+	try {
+		const response = await openai.images.generate({
+			model: 'dall-e-3',
+			prompt: `Generate an image for a 10 year old child that visually represents the following sentence: ${sentence}. The picture should be clear, easy to understand, and should fill the entire image space without any borders or extraneous details.  DO NOT INCLUDE ANY TEXT ON THE IMAGE.  USE COLOR.`,
+			n: 1,
+			size: '1024x1024'
+		});
 
-	const image_url = response.data[0].url;
-	return image_url;
+		const image_url = response.data[0].url;
+		return image_url;
+	} catch {
+		console.log('Error generating image for: ', sentence);
+		return null;
+	}
 };
 
 /**
@@ -37,16 +42,23 @@ async function main() {
 	const data = fs.readFileSync('./scripts/sentences/data.txt', 'utf8');
 	const arr = data.split('\n');
 
-	for (let i = 0; i < 50; i++) {
+	const { data: existingData } = await supabase.from('sentences').select('id');
+	const existingIds = existingData.map((d) => d.id);
+
+	for (let i = 0; i < arr.length; i++) {
 		const sentence = arr[i].trim();
 		//check if the record already exists
-		const { data: existingData } = await supabase.from('sentences').select('id').eq('id', i);
-		if (existingData.length > 0) {
+		if (existingIds.includes(i)) {
 			console.log(`${i} Skipping - ${sentence}`);
 			continue;
 		}
 
 		const url = await generateAIImage(sentence);
+
+		if (url === null) {
+			continue;
+		}
+
 		const img = await resizeImage(url);
 		const base64 = img.toString('base64');
 

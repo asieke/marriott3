@@ -11,9 +11,6 @@ export const GET = async (event) => {
 	} = event;
 	const code = url.searchParams.get('code') as string;
 
-	console.log('url', url);
-	console.log('code', code);
-
 	const next = url.searchParams.get('next') ?? '/app';
 
 	if (code) {
