@@ -7,13 +7,20 @@
 	onMount(() => {
 		//add a keyboard listener to toggle dark mode on 'd' key press
 		document.addEventListener('keydown', (e) => {
-			if (e.key === 'd') {
+			console.log('Key: ', e.key);
+
+			if (e.key === '2') {
 				document.documentElement.classList.toggle('dark');
 				//set local storage to remember dark mode preference
 				localStorage.setItem(
 					'theme',
 					document.documentElement.classList.contains('dark') ? 'dark' : 'light'
 				);
+			}
+
+			if (e.key === '3') {
+				//hard reload the page
+				location.reload();
 			}
 		});
 	});

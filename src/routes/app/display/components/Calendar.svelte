@@ -16,10 +16,21 @@
 
 		for (const event of data) {
 			const date = event.start.dateTime.split('T')[0];
+
+			// Check if the description contains HTML tags
+			if (event.description && /<[^>]+>/.test(event.description)) {
+				// Create a temporary DOM element to parse the HTML
+				const tempDiv = document.createElement('div');
+				tempDiv.innerHTML = event.description;
+
+				event.description = (tempDiv.children[0]?.innerHTML || '').trim();
+			}
+
 			newEvents[date] = newEvents[date] ? [...newEvents[date], event] : [event];
 		}
 
 		events = newEvents;
+		console.log(events);
 	}
 
 	onMount(() => {
