@@ -6,6 +6,8 @@
 	$: ({ supabase } = $page.data);
 
 	const signIn = async () => {
+		alert(`signing in - will redirect to: ', ${PUBLIC_CALLBACK_URL}`);
+
 		await supabase.auth.signInWithOAuth({
 			provider: 'google',
 			options: {
