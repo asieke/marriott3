@@ -36,7 +36,7 @@
 		// Fetch initial random sentence
 		randomProblem();
 
-		// Rotate image every 20 seconds
+		// Rotate image every 5 minutes
 		interval = setInterval(
 			async () => {
 				randomProblem();

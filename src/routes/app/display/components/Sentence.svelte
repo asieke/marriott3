@@ -29,7 +29,12 @@
 {#if record}
 	<div class="flex h-full w-full flex-row">
 		<img src={record.base64} alt="" class="h-full rounded-xl shadow-xl" />
-		<div class="flex items-center justify-center p-3 pl-5 text-[28px] dark:text-slate-200">
+
+		<div
+			class="flex items-center justify-center p-3 pl-5 {record.text.length > 32
+				? 'text-[18px]'
+				: 'text-[24px]'} dark:text-slate-200"
+		>
 			{record.text}
 		</div>
 	</div>
