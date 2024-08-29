@@ -35,7 +35,7 @@
 {/if}
 
 <div
-	class="grid h-[100vh] w-[100vw] grid-cols-4 grid-rows-5 gap-[1vw] bg-slate-800 px-[3vw] py-[3vh]"
+	class="grid h-[100vh] w-[100vw] grid-cols-4 grid-rows-5 gap-[1vw] bg-slate-800 px-[3vw] pb-[1vh] pt-[5vh]"
 	style="background: url('/backgrounds/{random}.jpg') no-repeat center center fixed; background-size: cover;"
 >
 	<div class="component"><DateTime /></div>
