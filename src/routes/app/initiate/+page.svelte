@@ -18,36 +18,6 @@
 		console.log('database initialized');
 	};
 
-	const syncArtists = async () => {
-		step = 'Artists';
-		synced = 0;
-		total = 0;
-		console.log('[START] - syncing artists');
-
-		const { data: count } = await supabase.rpc('count_artists');
-		total = count;
-		await db.artists.clear();
-
-		const chunk = 33;
-		const t1 = new Date().getTime();
-
-		for (let i = 0; i < count; i += chunk) {
-			const { data } = await supabase
-				.from('artists')
-				.select('*')
-				.order('id')
-				.range(i, i + chunk - 1);
-
-			if (data) {
-				await db.artists.bulkAdd(data);
-			}
-			synced += Math.min(chunk, count - i);
-			console.log('synced ', i + chunk, 'of', count);
-		}
-		const t2 = new Date().getTime();
-		console.log('[DONE] - Syncing Artists.  Time Taken: ', t2 - t1);
-	};
-
 	const syncArt = async () => {
 		step = 'Art';
 		synced = 0;
@@ -181,11 +151,10 @@
 	};
 
 	const sync = async () => {
-		// await syncArtists();
 		await syncArt();
-		// await syncEvents();
-		// await syncSentences();
-		// await syncPhotos();
+		await syncEvents();
+		await syncSentences();
+		await syncPhotos();
 		doneSyncing = 1;
 	};
 </script>
