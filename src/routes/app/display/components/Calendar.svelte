@@ -15,7 +15,7 @@
 		const newEvents: { [date: string]: GoogleCalendarEvent[] } = {};
 
 		for (const event of data) {
-			const date = event.start.dateTime.split('T')[0];
+			const date = event.start.dateTime ? event.start.dateTime.split('T')[0] : event.start.date;
 
 			// Check if the description contains HTML tags
 			if (event.description && /<[^>]+>/.test(event.description)) {
@@ -51,19 +51,26 @@
 <div class="h-full overflow-hidden text-slate-700 dark:text-slate-300">
 	{#each Object.entries(events) as [date, dailyevents]}
 		<div>
-			<div class="mb-2 text-xl text-slate-400 dark:text-slate-600">{fdate(date).getLongDate()}</div>
+			<div class="mb-2 text-xl text-slate-700 dark:text-slate-300">
+				{fdate(date).getLongDate()}
+			</div>
 			{#each dailyevents as { title, start, end, location, description, color }}
-				<div class="mb-2 grid grid-cols-[15px_1fr] rounded pb-2">
+				<div class="mb-2 grid grid-cols-[15px_1fr] rounded-lg">
 					<div
 						class="w-full rounded-l-lg py-2"
-						style="background-color: {calendarColors[color || 0]}"
+						style="background-color: rgb({calendarColors[color || 0]});"
 					/>
-					<div class="w-full rounded-r-lg bg-slate-100 p-2 dark:bg-slate-800">
-						<div class="text-xl font-bold">{title}</div>
+					<div
+						class="w-full rounded-r-lg p-2"
+						style="background-color: rgb({calendarColors[color || 0]}, 0.2);"
+					>
+						<div class=" text-xl font-bold">{title}</div>
 						{#if description}<div class="text-xl">{description}</div>{/if}
-						<div class="text-xl">
-							{fdate(start.dateTime).getTime()} - {fdate(end.dateTime).getTime()}
-						</div>
+						{#if start.dateTime}
+							<div class="text-xl">
+								{fdate(start.dateTime).getTime()} - {fdate(end.dateTime).getTime()}
+							</div>
+						{/if}
 						{#if location}<div class="text-sm">{location}</div>{/if}
 					</div>
 				</div>

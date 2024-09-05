@@ -38,14 +38,14 @@
 	class="grid h-[100vh] w-[100vw] grid-cols-10 grid-rows-5 gap-[1vw] bg-slate-800 px-[3vw] pb-[1vh] pt-[5vh]"
 	style="background: url('/backgrounds/{random}.jpg') no-repeat center center fixed; background-size: cover;"
 >
-	<div class="component col-span-3"><DateTime /></div>
+	<!-- <div class="component col-span-3"><DateTime /></div> -->
 
 	<div class="component col-span-3 row-span-5"><Calendar /></div>
-	<div class="component col-span-4 row-span-4"><History /></div>
+	<!-- <div class="component col-span-4 row-span-4"><History /></div>
 	<div class="component col-span-3 row-span-2"><Photo /></div>
 	<div class="component col-span-3 row-span-2"><Weather /></div>
 	<div class="component col-span-2"><Math /></div>
-	<div class="component col-span-2"><Sentence /></div>
+	<div class="component col-span-2"><Sentence /></div> -->
 </div>
 
 <style lang="postcss">

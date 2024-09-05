@@ -1,14 +1,14 @@
 export const calendarColors = [
-	'#ef4444', // red-500
-	'#f97316', // orange-400
-	'#facc15', // yellow-300
-	'#4ade80', // green-400
-	'#14b8a6', // teal-500
-	'#3b82f6', // blue-400
-	'#6366f1', // indigo-500
-	'#a855f7', // purple-400
-	'#ec4899', // pink-500
-	'#9ca3af' // gray-400
+	'239, 68, 68', // red-500
+	'249, 115, 22', // orange-400
+	'250, 204, 21', // yellow-300
+	'74, 222, 128', // green-400
+	'20, 184, 166', // teal-500
+	'59, 130, 246', // blue-400
+	'99, 102, 241', // indigo-500
+	'168, 85, 247', // purple-400
+	'236, 72, 153', // pink-500
+	'156, 163, 175' // gray-400
 ];
 
 export function fdate(dateStr: string) {
