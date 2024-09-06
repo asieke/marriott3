@@ -40,8 +40,10 @@
 
 <div class="flex h-full w-full items-center justify-center font-mono font-semibold">
 	<div class="text-center">
-		<p class="mb-4 text-5xl text-slate-900 dark:text-slate-100">{displayTime}</p>
-		<p class="text-xl text-slate-700 dark:text-slate-300">{displayDate}</p>
+		<a href="/app/initiate"
+			><p class="mb-4 text-5xl text-slate-900 dark:text-slate-100">{displayTime}</p></a
+		>
+		<a href="/"><p class="text-xl text-slate-700 dark:text-slate-300">{displayDate}</p></a>
 	</div>
 </div>
 
